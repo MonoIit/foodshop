@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block mega_menu %}
+<div class="dropdown-menu megamenu p-lg-5" role="menu">
+    <div class="row g-3 row-cols-1 row-cols-lg-5">
+        <div class="col"> <!-- start col -->
+            {% for cat in categories %}
+            {% if forloop.counter0 % 2 == 0 %}
+        </div>
+        <div class="col"> <!-- start col -->
+            {% endif %}
+            {% if forloop.counter0 % 2 == 1 %}
+            <div class="col-megamenu mt-4"> <!-- start row -->
+                {% else %}
+                <div class="col-megamenu"> <!-- start row -->
+                    {% endif %}
+                    <h6 class="title">cat.name</h6>
+                    <ul class="list-unstyled">
+                        {% for subcat in cat.subcats %}
+                        <li><a href="#" class="nav-link p-0">subcat.name</a></li>
+                        {% endfor %}
+                    </ul>
+                </div> <!-- end row -->
+                {% endfor %}
+
+            </div> <!-- end col -->
+        </div>
+    </div>
+</div>
+{% endblock %}
