@@ -1,0 +1,89 @@
+{% extends 'menu/index.html' %}
+{% load menu_tags %}
+
+{% block shop %}
+<section class="py-2">
+    <div class="container-lg">
+        <div class="row g-md-5">
+            <div class="col-md-3">
+                <ul class="navbar-nav justify-content-end menu-list list-unstyled d-flex gap-md-3 mb-0">
+                    {% show_categories %}
+                </ul>
+            </div>
+
+            <div class="col-md-9">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="section-header d-flex flex-wrap justify-content-between pb-2 mt-5 mt-lg-0">
+
+                            <h2 class="section-title">Самые продаваемые продукты</h2>
+
+                            <div class="d-flex align-items-center">
+                                <a href="#" class="btn btn-primary rounded-1">Ещё</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div
+                                class="product-grid row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5" id="product-list">
+
+                            {% show_products goods %}
+
+                        </div>
+                        <!-- / product-grid -->
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const categoryItems = document.querySelectorAll(".nav-item.border-dashed");
+
+        categoryItems.forEach(item => {
+            item.addEventListener("click", function(event) {
+                event.preventDefault();
+
+                // Получаем идентификатор выбранной категории
+                const categoryId = this.getAttribute("data-category-id");
+
+                // Убираем класс "selected-category" со всех <li> элементов
+                categoryItems.forEach(item => item.classList.remove("active"));
+
+                this.classList.add("active");
+
+                // Отправляем AJAX-запрос для получения продуктов выбранной категории
+                fetch(`/product/${categoryId}/`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Network response was not ok: ${response.statusText}`);
+                        }
+                        return response.text();
+                    })
+                    .then(data => {
+                        // Обновляем содержимое контейнера с продуктами
+                        document.getElementById("product-list").innerHTML = data;
+                    })
+                    .catch(error => {
+                        console.error('There has been a problem with your fetch operation:', error);
+                    });
+            });
+        });
+    });
+
+</script>
+{% endblock %}

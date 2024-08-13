@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 
-from menu.models import category, product
+from menu.models import category, product, blog, slide
+
 
 
 # Create your views here.
@@ -9,29 +10,30 @@ from menu.models import category, product
 menu = ['Продукты', "Бесплатная доставка", "Наш блог", "Органика", "Специальные предложения", "Распродажи"]
 
 
-def index(request):
+def show_shop(request):
+    blogs = blog.objects.all()
+    slides = slide.objects.all()
     cat = category.objects.all()
+    goods = product.objects.all()
     data = {
         'menu': menu,
         'categories': cat,
         'cat_selected': 1,
         'menu_selected': 0,
-        'cat_slug': cat[0].slug,
+        'blogs': blogs,
+        'slides': slides,
+        'goods': goods,
     }
-    return render(request, 'menu/index.html', context=data)
+    return render(request, 'menu/product_shop.html', context=data)
 
 
-def first_page(request, cat_slug):
-    cat = category.objects.all()
+def products_by_category(request, cat_slug):
     categor = get_object_or_404(category, slug=cat_slug)
+    goods = categor.product.all()
     data = {
-        'menu': menu,
-        'categories': cat,
-        'cat_selected': categor.pk,
-        'menu_selected': 0,
-        'cat_slug': cat_slug,
+        'goods': goods,
     }
-    return render(request, 'menu/index.html', context=data)
+    return render(request, 'menu/list_products.html', context=data)
 
 
 

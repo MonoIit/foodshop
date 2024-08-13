@@ -1,29 +1,26 @@
+{% load menu_tags %}
+
 {% for good in goods %}
 <div class="col">
+            {% if good.sale != 0 %}
+            <span class="badge bg-primary text-white fw-normal px-2 py-2 fs-7 position-absolute end-0 me-2">{{ good.sale }}% OFF</span>
     <div class="product-item">
         <figure>
-            {% if good.sale != 0 %}
-            <span class="badge bg-primary text-white fw-normal px-2 py-2 fs-7 position-absolute end-0 me-2">{{ good.sale }}</span>
             {% endif %}
-            <a href="{{ good.get_absolute_url }}" title="{{ good.name }}">
-                {% comment %}
-                <img src="{{ good.image }}" alt="Product Thumbnail" class="tab-image">
-                {% endcomment %}
+            <a href="#" title="{{ good.name }}">
+                <img src="{{ good.image.url }}" alt="Product Thumbnail" class="tab-image">
             </a>
         </figure>
         <div class="d-flex flex-column text-center">
             <h3 class="fs-6 fw-normal mb-0">{{ good.name }}</h3>
             <div>
-                {% comment %}
-<!--                        <span class="rating">-->
-<!--                          {% for star in good.stars %}-->
-<!--                          <svg width="18" height="18" class="text-warning">-->
-<!--                            <use xlink:href="{% star.state %}"></use>-->
-<!--                          </svg>-->
-<!--                          {% endfor %}-->
-<!--                        </span>-->
-<!--                <span>{{ good.reviews }}</span>-->
-                {% endcomment %}
+                        <span class="rating">
+                          {% for star in good.stars|stars|safe %}
+                          <img width="14" height="14" src="/media/icons/star-{{star}}.svg">
+                          {% endfor %}
+                        </span>
+                <span>({{ good.reviews }})</span>
+
             </div>
             <div class="d-flex justify-content-center align-items-center gap-2">
                 {% if good.sale %}
@@ -59,5 +56,7 @@
         </div>
     </div>
 </div>
+{% empty %}
+    <p>No products found in this category.</p>
 {% endfor %}
 
