@@ -29,7 +29,6 @@ def show_categories():
 
 @register.inclusion_tag('menu/list_products.html')
 def show_products(goods):
-
     return {'goods': goods}
 
 

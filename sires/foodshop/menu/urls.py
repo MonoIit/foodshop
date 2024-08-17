@@ -10,7 +10,6 @@ urlpatterns = [
     path('shop/', views.show_shop, name='shop'),
     path('shop/<slug:cat_slug>/', views.products_by_category, name='products_by_category'),
     path('delivery/', views.delivery, name='delivery'),
-    path('blog/', views.blogs, name='blogs'),
     path('organic/', views.organic, name='organic'),
     path('offers/', views.offers, name='offers'),
     path('sales/', views.sales, name='sales'),

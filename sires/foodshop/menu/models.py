@@ -11,12 +11,18 @@ class product(models.Model):
     image = models.ImageField(upload_to='photos/')
     stars = models.IntegerField(verbose_name="Оценка")
     reviews = models.IntegerField(verbose_name="Количество отзывов", default=0)
+    in_stock = models.BooleanField(verbose_name="В наличии", default=0)
+    keywords = models.TextField(null=True)
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
         return reverse('category', kwargs={'cat_slug': self.slug})
+
+    class Meta:
+        verbose_name = "Продукт"
+        verbose_name_plural = "Продукты"
 
 class category(models.Model):
     name = models.CharField(max_length=40, verbose_name="Название категории")
@@ -29,6 +35,10 @@ class category(models.Model):
     def get_absolute_url(self):
         return reverse('products_by_category', kwargs={'cat_slug': self.slug})
 
+    class Meta:
+        verbose_name = "Категория"
+        verbose_name_plural = "Категории"
+
 
 class slide(models.Model):
     title = models.CharField(max_length=255, verbose_name="Заголовок")
@@ -38,3 +48,13 @@ class slide(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name = "Слайд"
+        verbose_name_plural = "Слайды"
+
+
+class ProductDescription(models.Model):
+    fid = models.ForeignKey(to='product', related_name='description', on_delete=models.DO_NOTHING)
+    description = models.TextField()
+    index = models.TextField(null=True)
