@@ -373,9 +373,9 @@
               </select>
             </div>
             <div class="col-11 col-md-10 col-lg-8">
-              <form id="search-form" class="text-center" action="index.html" method="post">
-                <input type="text" class="form-control border-0 bg-transparent"
-                  placeholder="Search for more than 20,000 products">
+              <form id="search-form" class="text-center" action="{% url 'search' %}" method="get">
+                  <input type="text" class="form-control border-0 bg-transparent" id="query" name="q"
+                    placeholder="Search for more than 20,000 products">
               </form>
             </div>
             <div class="col-1">

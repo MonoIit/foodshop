@@ -1,5 +1,8 @@
+import json
+
 from django.db import models
 from django.urls import reverse
+from firewind.core import firewind
 
 
 class product(models.Model):
@@ -12,7 +15,7 @@ class product(models.Model):
     stars = models.IntegerField(verbose_name="Оценка")
     reviews = models.IntegerField(verbose_name="Количество отзывов", default=0)
     in_stock = models.BooleanField(verbose_name="В наличии", default=0)
-    keywords = models.TextField(null=True)
+    description = models.TextField(null=True)
 
     def __str__(self):
         return self.name
@@ -24,6 +27,25 @@ class product(models.Model):
         verbose_name = "Продукт"
         verbose_name_plural = "Продукты"
 
+    def save(self, *args, **kwargs):
+        """
+        Переопределяем логику сохранения объекта в БД
+        После сохранения в таблицу product берётся поле description и ищется его индекс,
+        затем этот индекс сохраняется в таблицу ProductDescription
+        """
+        # Сначала сохраняем объект Product
+        super().save(*args, **kwargs)
+        analyzer = firewind()
+
+        # После сохранения создаем индекс для продукта
+        index_data = analyzer.make_index(self.description)
+
+        # Кодируем в json
+        index_data['words'] = [node.to_dict() for node in index_data['words']]
+
+        # Создаём или обновляем объект в БД
+        ProductDescription.objects.update_or_create(fid=self, defaults={'index': index_data})
+
 class category(models.Model):
     name = models.CharField(max_length=40, verbose_name="Название категории")
     slug = models.SlugField(max_length=255, unique=True, db_index=True)
@@ -34,6 +56,8 @@ class category(models.Model):
 
     def get_absolute_url(self):
         return reverse('products_by_category', kwargs={'cat_slug': self.slug})
+
+
 
     class Meta:
         verbose_name = "Категория"
@@ -55,6 +79,10 @@ class slide(models.Model):
 
 
 class ProductDescription(models.Model):
-    fid = models.ForeignKey(to='product', related_name='description', on_delete=models.DO_NOTHING)
-    description = models.TextField()
-    index = models.TextField(null=True)
+    fid = models.OneToOneField(product, on_delete=models.CASCADE)
+    index = models.JSONField(null=True)
+
+    def __str__(self):
+        return f'Index for {self.fid.name}'
+
+

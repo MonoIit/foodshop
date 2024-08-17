@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import product, category, slide
+from .models import product, category, slide, ProductDescription
 
 
 admin.site.site_header = "Панель администрирования"
@@ -17,3 +17,8 @@ class ProductAdmin(admin.ModelAdmin):
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
     list_display_links = ('id', 'name')
+
+
+@admin.register(ProductDescription)
+class ProductDescriptionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'fid', 'index')
