@@ -388,39 +388,11 @@
         </div>
 
         <div class="col-sm-6 col-md-3 col-lg-2 d-flex justify-content-end gap-5 align-items-center mt-4 mt-sm-0 justify-content-center justify-content-sm-end">
-          <ul class="d-flex justify-content-end list-unstyled m-0">
-            <li>
-              <a href="#" class="p-2 mx-1">
-                <svg width="24" height="24">
-                  <use xlink:href="#user"></use>
-                </svg>
-              </a>
-            </li>
-            <li>
-              <a href="#" class="p-2 mx-1">
-                <svg width="24" height="24">
-                  <use xlink:href="#wishlist"></use>
-                </svg>
-              </a>
-            </li>
-            <li>
-              <a href="#" class="p-2 mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart"
-                aria-controls="offcanvasCart">
-                <svg width="24" height="24">
-                  <use xlink:href="#shopping-bag"></use>
-                </svg>
-              </a>
-            </li>
-            <li class="d-md-none">
-              <a href="#" class="p-2 mx-1" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSearch"
-                aria-controls="offcanvasSearch">
-                <svg width="24" height="24">
-                  <use xlink:href="#search"></use>
-                </svg>
-              </a>
-            </li>
-          </ul>
-
+          {% if user.is_authenticated %}
+          <p>{{user.username}} | <a href="{% url 'user:logout' %}">Выйти</a>
+          {% else %}
+          <p><a href="{% url 'user:login' %}">Войти</a> | <a href="#">Регистрация</a>
+          {% endif %}
         </div>
 
       </div>
